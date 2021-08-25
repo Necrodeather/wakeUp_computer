@@ -1,4 +1,5 @@
 from wakeonlan import send_magic_packet as wakeup
+from time import sleep
 from re import compile, escape
 from os import system
 
@@ -10,18 +11,23 @@ def wake_on_lan():
         with open('mac-addresses.txt') as file:
             mac_addresses = file.readlines()
     except FileNotFoundError:
-        print("Не удалось найти информацию о компьютерах.\nВозможно отсутствует файл или не был создан!")
+        system('cls')
+        print("Не удалось найти информацию о компьютерах.\nВозможно отсутствует файл или не был создан!\n")
         message()
     else:    
         for mac in mac_addresses:
-            wakeup(mac.strip("\n"))
+            wakeup(mac.rstrip("\n"))
+            print('ПК ' + mac.rstrip("\n") + ' был запущен!')
+            sleep(5)
         file.close()
+        print("Выполнено!\n")
 
 def add_mac():
     add = input('Введите MAC-Address ПК: ')
     with open('mac-addresses.txt', 'a') as a:
-        a.write('\n'+ add )
-    print("Выполнено!")
+        a.write(add + '\n')
+    system('cls')
+    print("Выполнено!\n")
     a.close()
 
 def delete_mac():
@@ -31,7 +37,8 @@ def delete_mac():
         with open('mac-addresses.txt') as d:
             lines = d.readlines()
     except FileNotFoundError:
-        print("Не удалось найти информацию о компьютерах.\nВозможно отсутствует файл или не был создан!")
+        system('cls')
+        print("Не удалось найти информацию о компьютерах.\nВозможно отсутствует файл или не был создан!\n")
         message()
     else:    
         pattern = compile(escape(delete))
@@ -40,8 +47,8 @@ def delete_mac():
                 result = pattern.search(line)
                 if result is None:
                     dw.write(line)
-
-    print("Выполнено!")
+    system('cls')
+    print("Выполнено!\n")
     dw.close()
     d.close()
 
@@ -50,7 +57,8 @@ def watch_list():
         with open('mac-addresses.txt') as file:
             watch = file.readlines()
     except FileNotFoundError:
-        print("Не удалось найти информацию о компьютерах.\nВозможно отсутствует файл или не был создан!")
+        system('cls')
+        print("Не удалось найти информацию о компьютерах.\nВозможно отсутствует файл или не был создан!\n")
         message()
     else:
         for list in watch:
@@ -60,11 +68,11 @@ def message():
     try:
         text = int(input(output))
     except ValueError:
-        print('Неверное значение')
+        system('cls')
+        print('Неверное значение\n')
         message()    
     if text == 1:
         wake_on_lan()
-        print("Выполнено!")
         message()
     elif text == 2:
         add_mac()       
@@ -81,7 +89,8 @@ def message():
     elif text == 0:
         quit()
     else:
-        print('Неверное значение')
+        system('cls')
+        print('Неверное значение\n')
         message() 
 
 message()
